@@ -17,11 +17,16 @@ function getWeather(lat, lng) {
 }
 
 function getAddress(lat,lng){
-  return
+  return fetch(`${ADDRESS_API_URL}&lat=${lat}&lon=${lng}`)
+  .then(response => response.json())
 }
 
-
+function getEmbedURL(lat, lng) {
+  return `https://darksky.net/map-embed/@temperature,${lat},${lng},4.js?domain="+encodeURIComponent(window.location.href)+"&auth=1525213550_b5fc128e7789bb56048952cc704c8473& embed=true&timeControl=false&fieldControl=false&defaultField=temperature&defaultUnits=_c`
+}
 export default {
+  getAddress,
   getWeather,
   getCoordinates,
+  getEmbedURL,
 };

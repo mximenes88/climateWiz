@@ -11,7 +11,7 @@
       </div>
       <div class="col-8 offset-2 text-center" v-if="forecast">
         <div class="card text-white bg-info mb-3">
-        <div class="card-header">Current Weather</div>
+        <div class="card-header">{{address}}</div>
           <div class="card-body">
             <h4 class="card-title">{{forecast.currently.summary}}</h4>
             <div class="card-text icon-temp">
@@ -24,7 +24,15 @@
         </div>
       </div>
     </div>
-</div>
+    <div class="col-8 offset-2">
+            <iframe
+              id="map-embed-iframe"
+              frameborder="0"
+              height="500px"
+              width="100%"
+              :src='embedURL'></iframe>
+          </div>
+        </div>
   </div>
 </template>
 
@@ -35,11 +43,13 @@ export default {
   name: 'home',
   data() {
     return {
-      location: '',
+      embedURL: '',
+      location: localStorage.location || '',
+      address:'',
       forecast: null,
       icons: {
-        'clear-day': '😎',
-        'clear-night': '🌕',
+      'clear-day': '😎',
+      'clear-night': '🌕',
         rain: '😴',
         snow: '☃️',
         sleet: '🥶',
@@ -53,18 +63,26 @@ export default {
     };
   },
   mounted() {
-    this.loadWeather('37.8267', '-122.4233');
+    this.loadWeather(localStorage.lat||'37.8267', localStorage.lng||'-122.4233');
   },
 
   methods: {
     loadWeather(lat, lng) {
+      localStorage.lat =lat;
+      localStorage.lng =lng;
+
+      this.embedURL = API.getEmbedURL(lat, lng);
+
+        API.getAddress(lat, lng).then((result) => {
+        this.address = [result.name,result.street].join(' ');
+      });
       API.getWeather(lat, lng).then((result) => {
-        window.forecast = this.forecast;
         this.forecast = result;
       });
     },
 
     updateLocation() {
+    localStorage.location=this.location;
       API.getCoordinates(this.location).then((result) => {
         this.loadWeather(result.latitude, result.longitude);
       });
@@ -85,4 +103,6 @@ body{
 .emoji{
   font-size:2em;
 }
+
+
 </style>
