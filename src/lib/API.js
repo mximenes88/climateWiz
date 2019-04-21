@@ -1,17 +1,27 @@
 
-const proxy='https://cors-anywhere.herokuapp.com/';
-const API_KEY= 'c202eca0a84479d1a53bf0e6549c478e';
-const location= '37.8267,-122.4233';
-const API_URL = `${proxy}https://api.darksky.net/forecast/c202eca0a84479d1a53bf0e6549c478e/37.8267,-122.4233`;
+const proxy = 'https://cors-anywhere.herokuapp.com/';
+const API_KEY = 'c202eca0a84479d1a53bf0e6549c478e';
+const WEATHER_API_URL = `${proxy}https://api.darksky.net/forecast/${API_KEY}/`;
+const GEO_API_URL = `${proxy}https://darksky.net/geo?q=`;
+const ADDRESS_API_URL = `${proxy}https://darksky.net/rgeo?hires=1`;
 
 
-
-
- function getWeather(){
-     return fetch(API_URL)
-    .then(res => res.json())
+function getCoordinates(location) {
+  return fetch(`${GEO_API_URL}${location}`)
+    .then(response => response.json());
 }
 
-export default{
-    getWeather
+function getWeather(lat, lng) {
+  return fetch(`${WEATHER_API_URL}${lat},${lng}`)
+    .then(res => res.json());
+}
+
+function getAddress(lat,lng){
+  return
+}
+
+
+export default {
+  getWeather,
+  getCoordinates,
 };

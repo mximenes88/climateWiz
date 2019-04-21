@@ -1,13 +1,21 @@
 <template>
   <div class="home">
     <div class="row">
-      <div class="col-8 offset-2 text-center">
+      <div class="col-8 offset-2">
+        <div class="input-group mb-3">
+          <input v-model="location" type="text" class="form-control" placeholder="Enter location">
+          <div class="input-group-append">
+            <button @click="updateLocation" class="btn btn-outline-secondary" type="button">Search</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-8 offset-2 text-center" v-if="forecast">
         <div class="card text-white bg-info mb-3">
         <div class="card-header">Current Weather</div>
           <div class="card-body">
             <h4 class="card-title">{{forecast.currently.summary}}</h4>
-            <div class="card-text">
-                {{forecast.currently.icon}}
+            <div class="card-text icon-temp">
+               <span class="emoji">{{icons[forecast.currently.icon]}}</span>
                 {{forecast.currently.temperature}} ℉
             </div>
             <div class="card-text">
@@ -17,38 +25,64 @@
       </div>
     </div>
 </div>
-    <pre>{{forecast}}</pre>
   </div>
 </template>
 
 <script>
-  import API from '@/lib/API'
+import API from '@/lib/API';
 
 export default {
   name: 'home',
-  data(){
-     return {
-       forecast:{},
-       icons:{
-         'clear-day': '😎',
-         'clear-night': '🌕',
-          rain: '😴',
-          snow: '☃️',
-          sleet: '🥶',
-          wind: '🤧',
-          fog : '🌫',
-          cloudy: '☁️',
-         'partly-cloudy-day' : '⛅️',
-         'partly-cloudy-night': '😔'
+  data() {
+    return {
+      location: '',
+      forecast: null,
+      icons: {
+        'clear-day': '😎',
+        'clear-night': '🌕',
+        rain: '😴',
+        snow: '☃️',
+        sleet: '🥶',
+        wind: '🤧',
+        fog: '🌫',
+        cloudy: '☁️',
+        'partly-cloudy-day': '⛅️',
+        'partly-cloudy-night': '😔',
 
-       }
-     };
+      },
+    };
   },
-  mounted(){
-    API.getWeather().then(result =>{
-      console.log(result);
-      this.forecast= result;
-    });
+  mounted() {
+    this.loadWeather('37.8267', '-122.4233');
   },
+
+  methods: {
+    loadWeather(lat, lng) {
+      API.getWeather(lat, lng).then((result) => {
+        window.forecast = this.forecast;
+        this.forecast = result;
+      });
+    },
+
+    updateLocation() {
+      API.getCoordinates(this.location).then((result) => {
+        this.loadWeather(result.latitude, result.longitude);
+      });
+    },
+  },
+
+
 };
 </script>
+
+<style>
+body{
+  font-size: 2em;
+}
+.icon-temp{
+   font-size:2em;
+}
+.emoji{
+  font-size:2em;
+}
+</style>
