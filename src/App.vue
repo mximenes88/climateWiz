@@ -1,10 +1,41 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <a class="navbar-brand" href="#"> Climate Wiz ☔️☀️</a>
+      <a class="navbar-brand" href="/"> ClimateWiz ☔️☀️</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+     <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home</a>
+        </li>| 
+        <li class="nav-item active">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+      </ul>
+      </div>
      </nav>
     <main class="container mt-2">
       <router-view/>
     </main>
   </div>
 </template>
+
+  <style>
+   .navbar-nav{
+     color: darkblue;
+     font-size:20px;
+   }
+
+   #navbarNav{
+     margin-left:700px;
+     font-size:20px;
+     
+   }
+
+
+ 
+
+
+</style>
